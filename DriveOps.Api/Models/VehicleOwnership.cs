@@ -8,6 +8,6 @@ public class VehicleOwnership
     public bool IsCurrentOwner { get; set; }
     public string? Notes { get; set; }
 
-    public Vehicle Vechile { get; set; } = null!;
+    public Vehicle Vehicle { get; set; } = null!;
     public Customer Customer { get; set; } = null!;
 }
