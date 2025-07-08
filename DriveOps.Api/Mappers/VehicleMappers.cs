@@ -52,6 +52,8 @@ public static class VehicleMappers
             Color = vehicle.Color,
             Vin = vehicle.Vin,
             Notes = vehicle.Notes,
+            CreatedAt = vehicle.CreatedAt,
+            UpdatedAt = vehicle.UpdatedAt,
             CurrentOwner = ownerDto
         };
     }
