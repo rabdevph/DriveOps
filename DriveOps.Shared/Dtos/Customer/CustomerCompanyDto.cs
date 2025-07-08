@@ -1,4 +1,4 @@
-namespace DriveOps.Shared.Dtos;
+namespace DriveOps.Shared.Dtos.Customer;
 
 public class CustomerCompanyDto
 {
