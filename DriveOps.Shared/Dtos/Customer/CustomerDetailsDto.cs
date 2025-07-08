@@ -1,3 +1,4 @@
+using DriveOps.Shared.Dtos.Vehicle;
 using DriveOps.Shared.Enums;
 
 namespace DriveOps.Shared.Dtos.Customer;
