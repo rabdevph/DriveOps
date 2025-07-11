@@ -3,7 +3,7 @@ using DriveOps.Shared.Enums;
 
 namespace DriveOps.Shared.Dtos.Customer;
 
-public class CustomerCreateDto
+public class CustomerCreateDto : ICustomerTypeDto
 {
     [Required]
     public CustomerType Type { get; set; }
