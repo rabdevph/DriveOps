@@ -11,7 +11,7 @@ namespace DriveOps.Api.Controllers;
 [ApiController]
 [Route("api/customers")]
 [Produces("application/json")]
-public class CustomersController(ICustomerService customerService) : ControllerBase
+public class CustomersController(ICustomerService customerService) : ApiBaseController
 {
     private readonly ICustomerService _customerService = customerService;
 
@@ -57,8 +57,8 @@ public class CustomersController(ICustomerService customerService) : ControllerB
     {
         var result = await _customerService.GetByIdAsync(id, onlyCurrent);
 
-        if (result is null)
-            return NotFound();
+        if (!result.Success)
+            return HandleServiceError(result);
 
         return Ok(result);
     }
@@ -82,8 +82,12 @@ public class CustomersController(ICustomerService customerService) : ControllerB
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var createdCustomer = await _customerService.CreateAsync(dto);
-        return CreatedAtAction(nameof(GetById), new { id = createdCustomer.Id }, createdCustomer);
+        var result = await _customerService.CreateAsync(dto);
+
+        if (!result.Success)
+            return HandleServiceError(result);
+
+        return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
     }
 
     /// <summary>
@@ -109,12 +113,12 @@ public class CustomersController(ICustomerService customerService) : ControllerB
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var customer = await _customerService.UpdateDetailsAsync(id, dto);
+        var result = await _customerService.UpdateDetailsAsync(id, dto);
 
-        if (customer is null)
-            return NotFound();
+        if (!result.Success)
+            return HandleServiceError(result);
 
-        return Ok(customer);
+        return Ok(result.Data);
     }
 
     /// <summary>
@@ -140,11 +144,11 @@ public class CustomersController(ICustomerService customerService) : ControllerB
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var customer = await _customerService.UpdateStatusAsync(id, dto);
+        var result = await _customerService.UpdateStatusAsync(id, dto);
 
-        if (customer is null)
-            return NotFound();
+        if (!result.Success)
+            return HandleServiceError(result);
 
-        return Ok(customer);
+        return Ok(result.Data);
     }
 }
