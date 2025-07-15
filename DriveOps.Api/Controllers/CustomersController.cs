@@ -60,7 +60,7 @@ public class CustomersController(ICustomerService customerService) : ApiBaseCont
         if (!result.Success)
             return HandleServiceError(result);
 
-        return Ok(result);
+        return Ok(result.Data);
     }
 
     /// <summary>

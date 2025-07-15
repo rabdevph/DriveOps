@@ -55,7 +55,7 @@ public class VehiclesController(IVehicleService vehicleService) : ApiBaseControl
         if (!result.Success)
             return HandleServiceError(result);
 
-        return Ok(result);
+        return Ok(result.Data);
     }
 
     /// <summary>
