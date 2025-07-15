@@ -10,7 +10,7 @@ namespace DriveOps.Api.Controllers;
 [ApiController]
 [Route("api/vehicles")]
 [Produces("application/json")]
-public class VehiclesController(IVehicleService vehicleService) : ControllerBase
+public class VehiclesController(IVehicleService vehicleService) : ApiBaseController
 {
     private readonly IVehicleService _vehicleService = vehicleService;
 
@@ -52,8 +52,8 @@ public class VehiclesController(IVehicleService vehicleService) : ControllerBase
     {
         var result = await _vehicleService.GetByIdAsync(id);
 
-        if (result is null)
-            return NotFound();
+        if (!result.Success)
+            return HandleServiceError(result);
 
         return Ok(result);
     }
@@ -77,8 +77,12 @@ public class VehiclesController(IVehicleService vehicleService) : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var createdVehicle = await _vehicleService.CreateAsync(dto);
-        return CreatedAtAction(nameof(GetById), new { id = createdVehicle.Id }, createdVehicle);
+        var result = await _vehicleService.CreateAsync(dto);
+
+        if (!result.Success)
+            return HandleServiceError(result);
+
+        return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
     }
 
     /// <summary>
@@ -104,11 +108,11 @@ public class VehiclesController(IVehicleService vehicleService) : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var vehicle = await _vehicleService.UpdateDetailsAsync(id, dto);
+        var result = await _vehicleService.UpdateDetailsAsync(id, dto);
 
-        if (vehicle is null)
-            return NotFound();
+        if (!result.Success)
+            return HandleServiceError(result);
 
-        return Ok(vehicle);
+        return Ok(result.Data);
     }
 }
