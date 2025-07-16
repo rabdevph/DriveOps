@@ -1,3 +1,4 @@
+using DriveOps.Api.Models;
 using DriveOps.Api.Results;
 using DriveOps.Shared.Dtos.Customer;
 using DriveOps.Shared.Enums;
@@ -50,10 +51,10 @@ public static class CustomerValidator
         return null;
     }
 
-    public static ServiceResult<CustomerDetailsDto>? ValidateExistingCustomer(object? resource, int id)
+    public static ServiceResult<T>? ValidateExistingCustomer<T>(Customer? customer, int id)
     {
-        if (resource is null)
-            return ServiceResult<CustomerDetailsDto>.Fail(
+        if (customer is null)
+            return ServiceResult<T>.Fail(
                 responseStatusCode: StatusCodes.Status404NotFound,
                 errorTitle: "Customer not found.",
                 errorMessage: $"Customer with ID[{id}] does not exists."

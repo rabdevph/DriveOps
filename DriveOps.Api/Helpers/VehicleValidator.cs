@@ -1,3 +1,4 @@
+using DriveOps.Api.Models;
 using DriveOps.Api.Results;
 using DriveOps.Shared.Dtos.Vehicle;
 
@@ -17,10 +18,10 @@ public static class VehicleValidator
         return null;
     }
 
-    public static ServiceResult<VehicleDetailsDto>? ValidateExistingVehicle(object? resource, int id)
+    public static ServiceResult<T>? ValidateExistingVehicle<T>(Vehicle? vehicle, int id)
     {
-        if (resource is null)
-            return ServiceResult<VehicleDetailsDto>.Fail(
+        if (vehicle is null)
+            return ServiceResult<T>.Fail(
                 responseStatusCode: StatusCodes.Status404NotFound,
                 errorTitle: "Vehicle not found.",
                 errorMessage: $"Vehicle with ID[{id}] does not exists."
