@@ -23,7 +23,7 @@ public static class VehicleOwnershipMappers
         var vehicleOwnership = new VehicleOwnership
         {
             VehicleId = dto.VehicleId,
-            CustomerId = dto.NewCustomerId,
+            CustomerId = dto.NewOwnerId,
             IsCurrentOwner = dto.IsCurrentOwner,
             Notes = dto.Notes
         };
