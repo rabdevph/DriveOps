@@ -7,7 +7,7 @@ public class VehicleOwnershipTransferDto
     [Required]
     public int VehicleId { get; set; }
     [Required]
-    public int NewCustomerId { get; set; }
+    public int NewOwnerId { get; set; }
     public bool IsCurrentOwner { get; set; }
     public string? Notes { get; set; }
 }
