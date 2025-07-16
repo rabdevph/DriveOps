@@ -65,12 +65,12 @@ public class CustomerService(DriveOpsContext dbContext) : ICustomerService
             .FirstOrDefaultAsync(c => c.Id == id);
 
         // Validate customer exists
-        var validationResult = CustomerValidator.ValidateExistingCustomer(customer, id);
+        var validationResult = CustomerValidator.ValidateExistingCustomer<CustomerDetailsDto>(customer, id);
         if (validationResult is not null)
             return validationResult;
 
         // Return customer details
-        var result = customer!.ToCustomerDetailsDto();
+        var result = customer!.ToCustomerDetailsDto(onlyCurrent);
         return ServiceResult<CustomerDetailsDto>.Ok(result);
     }
 
@@ -107,7 +107,7 @@ public class CustomerService(DriveOpsContext dbContext) : ICustomerService
             .FirstOrDefaultAsync(c => c.Id == id);
 
         // Validate customer exists
-        var validationResult = CustomerValidator.ValidateExistingCustomer(existingCustomer, id);
+        var validationResult = CustomerValidator.ValidateExistingCustomer<CustomerDetailsDto>(existingCustomer, id);
         if (validationResult is not null)
             return validationResult;
 
@@ -167,7 +167,7 @@ public class CustomerService(DriveOpsContext dbContext) : ICustomerService
             .FirstOrDefaultAsync(c => c.Id == id);
 
         // Check customer exists
-        var validationResult = CustomerValidator.ValidateExistingCustomer(existingCustomer, id);
+        var validationResult = CustomerValidator.ValidateExistingCustomer<CustomerDetailsDto>(existingCustomer, id);
         if (validationResult is not null)
             return validationResult;
 
