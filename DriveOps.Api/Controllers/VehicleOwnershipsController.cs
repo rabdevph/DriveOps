@@ -9,7 +9,7 @@ namespace DriveOps.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/vehicle-ownerships")]
-public class VehicleOwnershipsController(IVehicleOwnershipService vehicleOwnershipService) : ControllerBase
+public class VehicleOwnershipsController(IVehicleOwnershipService vehicleOwnershipService) : ApiBaseController
 {
     private readonly IVehicleOwnershipService _vehicleOwnershipService = vehicleOwnershipService;
 
@@ -31,10 +31,10 @@ public class VehicleOwnershipsController(IVehicleOwnershipService vehicleOwnersh
     {
         var result = await _vehicleOwnershipService.GetByIdAsync(id);
 
-        if (result is null)
-            return NotFound();
+        if (!result.Success)
+            return HandleServiceError(result);
 
-        return Ok(result);
+        return Ok(result.Data);
     }
 
     /// <summary>
@@ -56,8 +56,12 @@ public class VehicleOwnershipsController(IVehicleOwnershipService vehicleOwnersh
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var createdOwnership = await _vehicleOwnershipService.CreateAsync(dto);
-        return CreatedAtAction(nameof(GetById), new { id = createdOwnership.Id }, createdOwnership);
+        var result = await _vehicleOwnershipService.CreateAsync(dto);
+
+        if (!result.Success)
+            return HandleServiceError(result);
+
+        return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
     }
 
     /// <summary>
@@ -65,12 +69,12 @@ public class VehicleOwnershipsController(IVehicleOwnershipService vehicleOwnersh
     /// </summary>
     /// <param name="dto">Vehicle ownership transfer data.</param>
     /// <returns>
-    /// 200 Vehicle ownership transferred
+    /// 201 Vehicle ownership transferred
     /// 404 Invalid input
     /// 500 Unexpected error
     /// </returns>
     [HttpPost("transfer")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Transfer(
@@ -79,7 +83,11 @@ public class VehicleOwnershipsController(IVehicleOwnershipService vehicleOwnersh
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var transferedOwnership = await _vehicleOwnershipService.TransferAsync(dto);
-        return CreatedAtAction(nameof(GetById), new { id = transferedOwnership.Id }, transferedOwnership);
+        var result = await _vehicleOwnershipService.TransferAsync(dto);
+
+        if (!result.Success)
+            return HandleServiceError(result);
+
+        return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
     }
 }
