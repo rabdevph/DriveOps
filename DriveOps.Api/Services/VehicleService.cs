@@ -59,7 +59,7 @@ public class VehicleService(DriveOpsContext dbContext) : IVehicleService
             .FirstOrDefaultAsync(v => v.Id == id);
 
         // Validate vehicle exists
-        var validationResult = VehicleValidator.ValidateExistingVehicle(vehicle, id);
+        var validationResult = VehicleValidator.ValidateExistingVehicle<VehicleDetailsDto>(vehicle, id);
         if (validationResult is not null)
             return validationResult;
 
@@ -94,7 +94,7 @@ public class VehicleService(DriveOpsContext dbContext) : IVehicleService
         var existingVehicle = await _dbContext.Vehicles.FindAsync(id);
 
         // Validate vehicle exists
-        var validationResult = VehicleValidator.ValidateExistingVehicle(existingVehicle, id);
+        var validationResult = VehicleValidator.ValidateExistingVehicle<VehicleDetailsDto>(existingVehicle, id);
         if (validationResult is not null)
             return validationResult;
 
