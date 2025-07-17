@@ -11,6 +11,7 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
     public DbSet<CompanyCustomer> CompanyCustomers { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<VehicleOwnership> VehicleOwnerships { get; set; }
+    public DbSet<Mechanic> Mechanics { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,6 +22,7 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
         ConfigureCompanyCustomer(modelBuilder);
         ConfigureVehicle(modelBuilder);
         ConfigureVehicleOwnership(modelBuilder);
+        ConfigureMechanic(modelBuilder);
     }
 
     private static void ConfigureCustomer(ModelBuilder modelBuilder)
@@ -142,6 +144,29 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
                 .WithMany(c => c.VehicleOwnerships)
                 .HasForeignKey(vo => vo.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
+    public static void ConfigureMechanic(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Mechanic>(entity =>
+        {
+            entity.HasKey(m => m.Id);
+
+            entity.Property(m => m.FullName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(m => m.PhoneNumber)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            entity.Property(m => m.Specialization)
+                .HasMaxLength(100);
+
+            entity.Property(m => m.Status)
+                .IsRequired()
+                .HasConversion<string>();
         });
     }
 }
