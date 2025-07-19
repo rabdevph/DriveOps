@@ -11,7 +11,7 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
     public DbSet<CompanyCustomer> CompanyCustomers { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<VehicleOwnership> VehicleOwnerships { get; set; }
-    public DbSet<Mechanic> Mechanics { get; set; }
+    public DbSet<Technician> Technicians { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,7 +22,7 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
         ConfigureCompanyCustomer(modelBuilder);
         ConfigureVehicle(modelBuilder);
         ConfigureVehicleOwnership(modelBuilder);
-        ConfigureMechanic(modelBuilder);
+        ConfigureTechnician(modelBuilder);
     }
 
     private static void ConfigureCustomer(ModelBuilder modelBuilder)
@@ -147,9 +147,9 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
         });
     }
 
-    public static void ConfigureMechanic(ModelBuilder modelBuilder)
+    public static void ConfigureTechnician(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Mechanic>(entity =>
+        modelBuilder.Entity<Technician>(entity =>
         {
             entity.HasKey(m => m.Id);
 
