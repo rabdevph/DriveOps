@@ -12,6 +12,9 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<VehicleOwnership> VehicleOwnerships { get; set; }
     public DbSet<Technician> Technicians { get; set; }
+    public DbSet<JobOrder> JobOrders { get; set; }
+    public DbSet<ReportedIssue> ReportedIssues { get; set; }
+    public DbSet<InspectionFinding> InspectionFindings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,6 +26,9 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
         ConfigureVehicle(modelBuilder);
         ConfigureVehicleOwnership(modelBuilder);
         ConfigureTechnician(modelBuilder);
+        ConfigureJobOrder(modelBuilder);
+        ConfigureReportedIssue(modelBuilder);
+        ConfigureInspectionFinding(modelBuilder);
     }
 
     private static void ConfigureCustomer(ModelBuilder modelBuilder)
@@ -167,6 +173,84 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
             entity.Property(m => m.Status)
                 .IsRequired()
                 .HasConversion<string>();
+        });
+    }
+
+    private static void ConfigureJobOrder(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<JobOrder>(entity =>
+        {
+            entity.HasKey(jo => jo.Id);
+
+            entity.Property(jo => jo.JobOrderNumber)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            entity.Property(jo => jo.Status)
+                .IsRequired()
+                .HasConversion<string>();
+
+            entity.Property(jo => jo.CustomerId)
+                .IsRequired();
+
+            entity.Property(jo => jo.VehicleId)
+                .IsRequired();
+
+            entity.Property(jo => jo.TechnicianId)
+                .IsRequired();
+
+            entity.Property(jo => jo.CreatedAt)
+                .IsRequired();
+        });
+    }
+
+    private static void ConfigureReportedIssue(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ReportedIssue>(entity =>
+        {
+            entity.HasKey(ri => ri.Id);
+
+            entity.Property(ri => ri.Description)
+                .IsRequired()
+                .HasMaxLength(1024);
+
+            entity.Property(ri => ri.CreatedAt)
+                .IsRequired();
+
+            entity.HasOne(ri => ri.JobOrder)
+                .WithMany(jo => jo.Issues)
+                .HasForeignKey(ri => ri.JobOrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
+    private static void ConfigureInspectionFinding(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<InspectionFinding>(entity =>
+        {
+            entity.HasKey(f => f.Id);
+
+            entity.Property(f => f.Description)
+                .IsRequired()
+                .HasMaxLength(1024);
+
+            entity.Property(f => f.Recommendation)
+                .HasMaxLength(1024);
+
+            entity.Property(f => f.Severity)
+                .IsRequired()
+                .HasConversion<string>();
+
+            entity.Property(f => f.IsResolved)
+                .IsRequired();
+
+            entity.Property(f => f.CreatedAt)
+                .IsRequired();
+
+            entity.HasOne(f => f.JobOrder)
+                .WithMany(jo => jo.Findings)
+                .HasForeignKey(f => f.JobOrderId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
