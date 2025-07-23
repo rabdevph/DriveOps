@@ -11,7 +11,11 @@ public class JobOrder
     public int VehicleId { get; set; }
     public int TechnicianId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+
+    public Customer? Customer { get; set; }
+    public Vehicle? Vehicle { get; set; }
+    public Technician? Technician { get; set; }
 
     public List<ReportedIssue> Issues { get; set; } = [];
     public List<InspectionFinding> Findings { get; set; } = [];

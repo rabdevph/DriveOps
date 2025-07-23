@@ -17,4 +17,5 @@ public class Customer
     public IndividualCustomer? IndividualCustomer { get; set; }
     public CompanyCustomer? CompanyCustomer { get; set; }
     public List<VehicleOwnership> VehicleOwnerships { get; set; } = [];
+    public List<JobOrder> JobOrders { get; set; } = [];
 }

@@ -11,4 +11,6 @@ public class Technician
     public TechnicianStatus Status { get; set; } = TechnicianStatus.Active;
     public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
+
+    public List<JobOrder> JobOrders { get; set; } = [];
 }

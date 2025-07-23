@@ -201,6 +201,21 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
 
             entity.Property(jo => jo.CreatedAt)
                 .IsRequired();
+
+            entity.HasOne(jo => jo.Customer)
+                .WithMany(c => c.JobOrders)
+                .HasForeignKey(jo => jo.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(jo => jo.Vehicle)
+                .WithMany(v => v.JobOrders)
+                .HasForeignKey(jo => jo.VehicleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(jo => jo.Technician)
+                .WithMany(t => t.JobOrders)
+                .HasForeignKey(jo => jo.TechnicianId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 
