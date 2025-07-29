@@ -9,7 +9,7 @@ public class InspectionFinding
     public string Description { get; set; } = string.Empty;
     public string? Recommendation { get; set; }
     public FindingSeverity Severity { get; set; }
-    public bool IsResolved { get; set; }
+    public bool IsResolved { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 
