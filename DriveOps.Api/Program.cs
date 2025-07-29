@@ -13,6 +13,7 @@ builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IVehicleOwnershipService, VehicleOwnershipService>();
 builder.Services.AddScoped<ITechnicianService, TechnicianService>();
 builder.Services.AddScoped<IJobOrderService, JobOrderService>();
+builder.Services.AddScoped<IReportedIssue, ReportedIssue>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
