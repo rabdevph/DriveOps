@@ -95,8 +95,8 @@ public class ReportedIssue(DriveOpsContext dbContext) : IReportedIssue
         if (validationResult is not null)
             return validationResult;
 
-        // Validate job order status
-        validationResult = JobOrderValidator.ValidateJobOrderStatus<ReportedIssueDetailsDto>(jobOrder!);
+        // Validate job order status for creation
+        validationResult = JobOrderValidator.ValidateJobOrderStatusForOperation<ReportedIssueDetailsDto>(jobOrder!, "create", "reported issue");
         if (validationResult is not null)
             return validationResult;
 
@@ -124,15 +124,16 @@ public class ReportedIssue(DriveOpsContext dbContext) : IReportedIssue
         if (validationResult is not null)
             return validationResult;
 
-        // Validate job order status
-        validationResult = JobOrderValidator.ValidateJobOrderStatus<ReportedIssueDetailsDto>(jobOrder!);
+        // Validate job order status for updates
+        validationResult = JobOrderValidator.ValidateJobOrderStatusForOperation<ReportedIssueDetailsDto>(jobOrder!, "update", "reported issue");
         if (validationResult is not null)
             return validationResult;
 
-        // Find reported issue by ID and job order
-        var reportedIssue = await _dbContext.ReportedIssues.FindAsync(id);
+        // Find reported issue within the specific job order
+        var reportedIssue = await _dbContext.ReportedIssues
+            .FirstOrDefaultAsync(ri => ri.Id == id && ri.JobOrderId == jobOrder!.Id);
 
-        // Validate reported issue exists
+        // Validate reported issue exists and belongs to job order
         validationResult = ReportedIssueValidator.ValidateReportedIssueExists<ReportedIssueDetailsDto>(reportedIssue, id);
         if (validationResult is not null)
             return validationResult;
@@ -158,8 +159,8 @@ public class ReportedIssue(DriveOpsContext dbContext) : IReportedIssue
         if (validationResult is not null)
             return validationResult;
 
-        // Validate job order status
-        validationResult = JobOrderValidator.ValidateJobOrderStatus<bool>(jobOrder!);
+        // Validate job order status for deletion
+        validationResult = JobOrderValidator.ValidateJobOrderStatusForOperation<bool>(jobOrder!, "delete", "reported issue");
         if (validationResult is not null)
             return validationResult;
 
