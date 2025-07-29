@@ -14,6 +14,7 @@ builder.Services.AddScoped<IVehicleOwnershipService, VehicleOwnershipService>();
 builder.Services.AddScoped<ITechnicianService, TechnicianService>();
 builder.Services.AddScoped<IJobOrderService, JobOrderService>();
 builder.Services.AddScoped<IReportedIssue, ReportedIssue>();
+builder.Services.AddScoped<IInspectionFindingService, InspectionFindingService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
