@@ -89,7 +89,23 @@ public class JobOrderService(DriveOpsContext dbContext) : IJobOrderService
         if (validationResult is not null)
             return validationResult;
 
-        // Other validations to be included later..
+        // Validate customer exists
+        var customer = await _dbContext.Customers.FindAsync(dto.CustomerId);
+        var customerValidationResult = CustomerValidator.ValidateExistingCustomer<JobOrderDetailsDto>(customer, dto.CustomerId);
+        if (customerValidationResult is not null)
+            return customerValidationResult;
+
+        // Validate vehicle exists
+        var vehicle = await _dbContext.Vehicles.FindAsync(dto.VehicleId);
+        var vehicleValidationResult = VehicleValidator.ValidateExistingVehicle<JobOrderDetailsDto>(vehicle, dto.VehicleId);
+        if (vehicleValidationResult is not null)
+            return vehicleValidationResult;
+
+        // Validate technician exists
+        var technician = await _dbContext.Technicians.FindAsync(dto.TechnicianId);
+        var technicianValidationResult = TechnicianValidator.ValidateTechnicianExists<JobOrderDetailsDto>(technician, dto.TechnicianId);
+        if (technicianValidationResult is not null)
+            return technicianValidationResult;
 
         // Save new job order
         var newJobOrder = dto.ToEntity();
