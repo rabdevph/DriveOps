@@ -250,6 +250,7 @@ public class DriveOpsContext(DbContextOptions<DriveOpsContext> options)
                 .HasMaxLength(1024);
 
             entity.Property(f => f.Recommendation)
+                .IsRequired()
                 .HasMaxLength(1024);
 
             entity.Property(f => f.Severity)

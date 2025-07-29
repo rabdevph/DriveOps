@@ -7,7 +7,7 @@ public class InspectionFinding
     public int Id { get; set; }
     public int JobOrderId { get; set; }
     public string Description { get; set; } = string.Empty;
-    public string? Recommendation { get; set; }
+    public string Recommendation { get; set; } = string.Empty;
     public FindingSeverity Severity { get; set; }
     public bool IsResolved { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
