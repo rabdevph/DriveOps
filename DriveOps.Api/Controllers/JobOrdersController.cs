@@ -15,10 +15,10 @@ public class JobOrdersController(IJobOrderService jobOrderService) : ApiBaseCont
     /// <summary>
     /// Gets a paginated list of job orders, optionally filtered by status and/or customer ID.
     /// </summary>
-    /// <param name="status">Optional job order status.</param>
-    /// <param name="customerId">Optional job order ID.</param>
+    /// <param name="status">Optional job order status filter.</param>
+    /// <param name="customerId">Optional customer ID filter.</param>
     /// <param name="page">Page number (default: 1).</param>
-    /// <param name="pageSize">Number of items per page (default: 10).</param>
+    /// <param name="pageSize">Number of items per page (default: 10, max: 100).</param>
     /// <returns>
     /// 200 Paginated list of job orders  
     /// 500 Unexpected error
@@ -37,11 +37,11 @@ public class JobOrdersController(IJobOrderService jobOrderService) : ApiBaseCont
     }
 
     /// <summary>
-    /// Gets the full details of a job order by ID, including customer, vehicle, and technician.
+    /// Gets the full details of a job order by ID, including customer, vehicle, and technician information.
     /// </summary>
-    /// <param name="id">Job Order ID.</param>
+    /// <param name="id">The job order ID.</param>
     /// <returns>
-    /// 200 Job order details  
+    /// 200 Job order details retrieved successfully  
     /// 404 Job order not found  
     /// 500 Unexpected error
     /// </returns>
@@ -61,17 +61,19 @@ public class JobOrdersController(IJobOrderService jobOrderService) : ApiBaseCont
     }
 
     /// <summary>
-    /// Creates a new job order.
+    /// Creates a new job order with the specified customer, vehicle, and technician.
     /// </summary>
-    /// <param name="dto">Job order data.</param>
+    /// <param name="dto">The job order creation data.</param>
     /// <returns>
-    /// 201 Job order created  
-    /// 400 Invalid input  
+    /// 201 Job order created successfully  
+    /// 400 Invalid input or duplicate job order number  
+    /// 404 Customer, vehicle, or technician not found  
     /// 500 Unexpected error
     /// </returns>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create(
         [FromBody] JobOrderCreateDto dto)
@@ -88,14 +90,14 @@ public class JobOrdersController(IJobOrderService jobOrderService) : ApiBaseCont
     }
 
     /// <summary>
-    /// Updates core details of a job order.
+    /// Updates the core details of a job order (customer, vehicle, or technician assignment).
     /// </summary>
-    /// <param name="id">Job order ID.</param>
-    /// <param name="dto">Job order details.</param>
+    /// <param name="id">The job order ID.</param>
+    /// <param name="dto">The job order details to update.</param>
     /// <returns>
-    /// 200 Job order details updated  
+    /// 200 Job order details updated successfully  
     /// 400 Invalid input  
-    /// 404 Job order or a core detail not found  
+    /// 404 Job order, customer, vehicle, or technician not found  
     /// 500 Unexpected error
     /// </returns>
     [HttpPatch("{id:int}")]
@@ -103,7 +105,7 @@ public class JobOrdersController(IJobOrderService jobOrderService) : ApiBaseCont
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateStatus(
+    public async Task<IActionResult> UpdateDetails(
         int id,
         [FromBody] JobOrderDetailsPatchDto dto)
     {
@@ -119,12 +121,12 @@ public class JobOrdersController(IJobOrderService jobOrderService) : ApiBaseCont
     }
 
     /// <summary>
-    /// Updates the status of a job order (e.g., pending or in progress).
+    /// Updates the status of a job order (e.g., Pending, InProgress, Completed, Cancelled).
     /// </summary>
-    /// <param name="id">Job order ID.</param>
-    /// <param name="dto">New status.</param>
+    /// <param name="id">The job order ID.</param>
+    /// <param name="dto">The new status to set.</param>
     /// <returns>
-    /// 200 Job order status updated  
+    /// 200 Job order status updated successfully  
     /// 400 Invalid input  
     /// 404 Job order not found  
     /// 500 Unexpected error
