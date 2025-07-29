@@ -43,16 +43,14 @@ public class JobOrderValidator
         return null;
     }
 
-    public static ServiceResult<T>? ValidateJobOrderStatus<T>(JobOrder jobOrder)
+    public static ServiceResult<T>? ValidateJobOrderStatusForOperation<T>(JobOrder jobOrder, string operation, string entityType)
     {
-        Console.WriteLine($"🚀🚀🚀: {jobOrder.Status}");
-
-        if (jobOrder.Status != JobOrderStatus.Pending && jobOrder.Status != JobOrderStatus.InProgress)
+        if (jobOrder.Status == JobOrderStatus.Completed || jobOrder.Status == JobOrderStatus.Cancelled)
         {
             return ServiceResult<T>.Fail(
                 responseStatusCode: StatusCodes.Status409Conflict,
-                errorTitle: "Invalid job order status",
-                errorMessage: "You can only add reported issues to job orders that are in Pending or InProgress status."
+                errorTitle: $"Cannot {operation} {entityType}",
+                errorMessage: $"Job order is {jobOrder.Status}, cannot {operation} {entityType}."
             );
         }
 
